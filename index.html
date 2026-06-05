@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>迷你辅助平台</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#0a0a14;color:#e8e8f0;min-height:100vh;overflow-x:hidden;line-height:1.6}
+.hidden{display:none!important}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,20,0.92);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:10px 16px;height:52px}
+.top-bar h1{font-size:20px;font-weight:700;color:#7c5cfc}
+.top-actions{display:flex;gap:8px}
+.top-actions button{background:#0f0f1e;border:1px solid rgba(255,255,255,0.06);color:#e8e8f0;padding:6px 14px;border-radius:8px;font-size:13px;cursor:pointer}
+.main-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,20,0.95);border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-around;align-items:center;height:56px}
+.main-nav .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:#9a9ab0;font-size:11px;padding:6px 12px;cursor:pointer}
+.main-nav .nav-item.active{color:#7c5cfc}
+.page{padding:60px 12px 64px;max-width:480px;margin:0 auto}
+.page.active{display:block}
+.page:not(.active){display:none}
+.card{background:#0f0f1e;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:12px}
+input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:#e8e8f0;font-size:14px;outline:none}
+input:focus{border-color:#7c5cfc}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:pointer;min-height:40px}
+.btn-primary{background:#7c5cfc;color:#fff}
+.btn-success{background:#4ade80;color:#000}
+.btn-danger{background:#f87171;color:#fff}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#e8e8f0}
+.btn-sm{padding:6px 12px;font-size:12px;min-height:32px}
+.btn-block{width:100%}
+.goods-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goods-card{background:#0f0f1e;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px}
+.goods-card .goods-name{font-size:14px;font-weight:600;margin-bottom:4px;color:#e8e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goods-card .goods-price{font-size:16px;font-weight:700;color:#7c5cfc;margin-bottom:4px}
+.goods-card .goods-stock{font-size:12px;color:#4a4a5e;margin-bottom:8px}
+.goods-card .goods-actions{display:flex;gap:6px}
+.goods-card .goods-actions button{flex:1;padding:6px 4px;font-size:12px}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#0f0f1e;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;width:100%;max-width:400px;max-height:80vh;overflow-y:auto}
+.modal-box h2{font-size:18px;margin-bottom:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;color:#9a9ab0;margin-bottom:4px}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions button{flex:1}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0f0f1e;border-radius:8px;padding:4px}
+.tabs .tab{flex:1;padding:8px;text-align:center;border:none;background:none;color:#9a9ab0;font-size:13px;cursor:pointer;border-radius:6px}
+.tabs .tab.active{background:#7c5cfc;color:#fff}
+.order-item{padding:12px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px}
+.order-item:last-child{border-bottom:none}
+.order-item .order-title{font-weight:600;color:#e8e8f0}
+.order-status.completed{color:#4ade80}
+.fav-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.fav-item:last-child{border-bottom:none}
+.cat-tag{display:inline-block;padding:2px 10px;background:#7c5cfc;color:#fff;border-radius:12px;font-size:11px;margin-right:4px}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th,.admin-table td{padding:8px 6px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06)}
+.admin-table th{color:#9a9ab0;font-weight:500}
+.admin-actions{display:flex;gap:4px}
+.admin-actions button{font-size:11px;padding:4px 8px}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:300;background:#0f0f1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px 20px;font-size:14px;display:none;max-width:90%;text-align:center}
+.toast.show{display:block;animation:fadeInOut 2s ease}
+@keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+</style></head><body>
+<div class="top-bar"><h1>VG商城</h1><div class="top-actions"><button id="topUserBtn" onclick="showUserPanel()">👤</button><button id="topAdminBtn" class="hidden" onclick="showAdmin()">⚙️</button></div></div>
+<div id="page-home" class="page active"><div style="margin-bottom:12px"><input id="searchInput" placeholder="搜索商品..." oninput="searchGoods(this.value)"></div><div id="catTabs" class="tabs"></div><div id="goodsList" class="goods-grid"></div></div>
+<div id="page-fav" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">❤️ 收藏</h2><div id="favList"></div></div>
+<div id="page-orders" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">📦 订单</h2><div id="orderList"></div></div>
+<div id="page-profile" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">👤 个人中心</h2><div class="card"><div id="profileInfo" style="font-size:14px;color:#9a9ab0">未登录</div></div><div class="card"><button class="btn btn-primary btn-block" onclick="showLoginModal()">登录</button></div><div class="card"><button class="btn btn-outline btn-block" onclick="showRegisterModal()">注册</button></div></div>
+<div id="page-admin" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">⚙️ 管理后台</h2><div class="tabs" id="adminTabs"><button class="tab active" onclick="adminTab('goods')">商品</button><button class="tab" onclick="adminTab('orders')">订单</button><button class="tab" onclick="adminTab('users')">用户</button><button class="tab" onclick="adminTab('cats')">分类</button></div><div id="adminContent"></div></div>
+<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()"><div id="modalBody" class="modal-box"></div></div>
+<div id="toast" class="toast"></div>
+<div class="main-nav"><button class="nav-item active" onclick="goPage('home')"><span>🏠</span><span>首页</span></button><button class="nav-item" onclick="goPage('fav')"><span>❤️</span><span>收藏</span></button><button class="nav-item" onclick="goPage('orders')"><span>📦</span><span>订单</span></button><button class="nav-item" onclick="goPage('profile')"><span>👤</span><span>我的</span></button></div>
+<script>
+var APP={};
+APP.STORAGE_KEY='vg_shop_v2';
+APP.users=[{user:'admin',pass:'admin123',role:'admin',money:999999,pts:99999},{user:'test',pass:'123456',role:'user',money:100,pts:10}];
+APP.me={};
+APP.data={prods:[],goods:[],users:[],orders:[],favs:[],cats:[]};
+APP.ls=function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+APP.ss=function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+APP.load=function(){var d=APP.ls(APP.STORAGE_KEY);if(d&&d.prods&&d.prods.length>0){APP.data=d;if(!APP.data.goods||APP.data.goods.length===0){APP.data.goods=[];APP.syncG()}if(!APP.data.cats)APP.data.cats=['卡密','点卡','实物'];if(!APP.data.users||APP.data.users.length===0)APP.data.users=APP.users.slice();else for(var i=0;i<APP.users.length;i++){var f=false;for(var j=0;j<APP.data.users.length;j++){if(APP.data.users[j].user===APP.users[i].user){f=true;break}}if(!f)APP.data.users.push(APP.users[i])}}else{var gs=[{n:'游戏皮肤',p:29.9,d:'炫酷限定皮肤',s:100,c:'卡密'},{n:'音乐会员月卡',p:15,d:'全曲库畅听',s:200,c:'卡密'},{n:'电子书合集',p:9.9,d:'畅销书电子版',s:300,c:'卡密'},{n:'激活码',p:49.9,d:'软件授权激活码',s:50,c:'卡密'}];APP.data.prods=[];APP.data.goods=[];for(var i=0;i<gs.length;i++){var gi=gs[i];APP.data.prods.push({name:gi.n,price:gi.p,desc:gi.d,stock:gi.s,category:gi.c});APP.data.goods.push({name:gi.n,price:gi.p,desc:gi.d,stock:gi.s,category:gi.c})}APP.data.users=APP.users.slice();APP.data.orders=[];APP.data.favs=[];APP.data.cats=['卡密','点卡','实物'];APP.save()}var u=APP.ls('vg_cur');if(u)APP.me=APP.fu(u)};
+APP.save=function(){APP.ss(APP.STORAGE_KEY,APP.data);if(APP.me)APP.ss('vg_cur',APP.me.user);else APP.ss('vg_cur','')};
+APP.syncG=function(){APP.data.goods=[];for(var i=0;i<APP.data.prods.length;i++){var p=APP.data.prods[i];APP.data.goods.push({name:p.name,price:p.price,desc:p.desc||'',stock:p.stock,category:p.category||'卡密'})}APP.save()};
+APP.syncP=function(){for(var i=0;i<APP.data.prods.length;i++)for(var j=0;j<APP.data.goods.length;j++)if(APP.data.prods[i].name===APP.data.goods[j].name){APP.data.prods[i].stock=APP.data.goods[j].stock;break}APP.save()};
+APP.fu=function(u){for(var i=0;i<APP.data.users.length;i++)if(APP.data.users[i].user===u)return APP.data.users[i];return null};
+APP.fg=function(n){for(var i=0;i<APP.data.goods.length;i++)if(APP.data.goods[i].name===n)return APP.data.goods[i];return null};
+function $(i){return document.getElementById(i)}
+function t(m){var e=$('toast');e.textContent=m;e.className='toast show';setTimeout(function(){e.className='toast'},2000)}
+function goPage(n){var ps=['home','fav','orders','profile','admin'];for(var i=0;i<ps.length;i++){var e=$('page-'+ps[i]);if(e)e.className=(ps[i]===n)?'page active':'page'}var ns=document.querySelectorAll('.main-nav .nav-item');for(var i=0;i<ns.length;i++){ns[i].className='nav-item';var sp=ns[i].querySelector('span:last-child');if(sp&&sp.textContent==='首页'&&n==='home')ns[i].className='nav-item active';if(sp&&sp.textContent==='收藏'&&n==='fav')ns[i].className='nav-item active';if(sp&&sp.textContent==='订单'&&n==='orders')ns[i].className='nav-item active';if(sp&&sp.textContent==='我的'&&n==='profile')ns[i].className='nav-item active'}if(n==='home')renderHome();else if(n==='fav')renderFav();else if(n==='orders')renderOrders();else if(n==='profile')renderProfile();else if(n==='admin')renderAdmin()}
+function modal(h){$('modalBody').innerHTML=h;$('modalOverlay').className='modal-overlay active'}
+function closeModal(){$('modalOverlay').className='modal-overlay'}
+function showUserPanel(){var u=APP.me;if(!u){modal('<h2>用户菜单</h2><p style="margin-bottom:12px;color:#9a9ab0">未登录</p><div class="modal-actions"><button class="btn btn-primary" onclick="showLogin()">登录</button><button class="btn btn-outline" onclick="showReg()">注册</button><button class="btn btn-outline" onclick="closeModal()">关闭</button></div>');return}var h='<h2>用户菜单</h2><div style="font-size:14px;margin-bottom:12px">👤 '+u.user+' | 余额: ¥'+u.money+' | 积分: '+u.pts+'</div><div class="modal-actions">';if(u.role==='admin')h+='<button class="btn btn-primary" onclick="closeModal();showAdmin()">管理后台</button>';h+='<button class="btn btn-outline" onclick="logout()">退出</button><button class="btn btn-outline" onclick="closeModal()">关闭</button></div>';modal(h)}
+function showLogin(){modal('<h2>登录</h2><div class="form-group"><label>用户名</label><input id="loginUser" placeholder="用户名"></div><div class="form-group"><label>密码</label><input id="loginPass" type="password" placeholder="密码"></div><div class="modal-actions"><button class="btn btn-primary" onclick="doLogin()">登录</button><button class="btn btn-outline" onclick="closeModal()">取消</button></div>')}
+function showReg(){modal('<h2>注册</h2><div class="form-group"><label>用户名</label><input id="regUser" placeholder="用户名"></div><div class="form-group"><label>密码</label><input id="regPass" type="password" placeholder="密码"></div><div class="form-group"><label>确认密码</label><input id="regPass2" type="password" placeholder="再次输入"></div><div class="modal-actions"><button class="btn btn-primary" onclick="doReg()">注册</button><button class="btn btn-outline" onclick="closeModal()">取消</button></div>')}
+function doLogin(){var u=$('loginUser').value.trim(),p=$('loginPass').value.trim();if(!u||!p){t('请输入');return}var us=APP.fu(u);if(!us){t('用户不存在');return}if(us.pass!==p){t('密码错误');return}APP.me=us;APP.save();closeModal();t('登录成功');renderProfile();var b=$('topAdminBtn');b.className=us.role==='admin'?'':'hidden'}
+function doReg(){var u=$('regUser').value.trim(),p=$('regPass').value.trim(),p2=$('regPass2').value.trim();if(!u||!p||!p2){t('请填完整');return}if(p!==p2){t('密码不一致');return}if(APP.fu(u)){t('用户名已存在');return}var nu={user:u,pass:p,role:'user',money:0,pts:0};APP.data.users.push(nu);APP.me=nu;APP.save();closeModal();t('注册成功');renderProfile()}
+function logout(){APP.me={};APP.save();closeModal();t("已退出");renderProfile();$("topAdminBtn").className="hidden"}
+// 首页
+var curCat='全部',kw='';
+function searchGoods(v){kw=v.trim();renderHome()}
+function renderHome(){renderCats();renderGoods()}
+function renderCats(){var cs=['全部'];for(var i=0;i<APP.data.cats.length;i++)cs.push(APP.data.cats[i]);var h='';for(var i=0;i<cs.length;i++){var a=(cs[i]===curCat)?'active':'';h+='<button class="tab '+a+'" onclick="selCat(\''+cs[i].replace(/'/g,"\\'")+'\')">'+cs[i]+'</button>'}$('catTabs').innerHTML=h}
+function selCat(c){curCat=c;renderCats();renderGoods()}
+function renderGoods(){var c=$('goodsList');if(!c)return;var g=APP.data.goods,fl=[];for(var i=0;i<g.length;i++){if(curCat!=='全部'&&g[i].category!==curCat)continue;if(kw&&g[i].name.indexOf(kw)===-1&&(g[i].desc||'').indexOf(kw)===-1)continue;fl.push(g[i])}if(!fl.length){c.innerHTML='<div style="text-align:center;padding:40px;color:#4a4a5e">暂无商品</div>';return}var h='';for(var i=0;i<fl.length;i++){var g2=fl[i];h+='<div class="goods-card"><div class="goods-name">'+g2.name+'</div><div class="goods-price">¥'+g2.price.toFixed(1)+'</div><div class="goods-stock">库存: '+g2.stock+'</div><div class="goods-actions"><button class="btn btn-primary btn-sm" onclick="buyGoods(\''+g2.name.replace(/'/g,"\\'")+'\')">购买</button><button class="btn btn-outline btn-sm" onclick="toggleFav(\''+g2.name.replace(/'/g,"\\'")+'\')">收藏</button><button class="btn btn-outline btn-sm" onclick="goodsDetail(\''+g2.name.replace(/'/g,"\\'")+'\')">详情</button></div></div>'}c.innerHTML=h}
+function goodsDetail(n){var g=APP.fg(n);if(!g){t('不存在');return}modal('<h2>'+g.name+'</h2><p style="color:#7c5cfc;font-size:20px;font-weight:700;margin:8px 0">¥'+g.price.toFixed(1)+'</p><p style="color:#9a9ab0;margin:8px 0">库存: '+g.stock+' | 分类: '+g.category+'</p><p style="color:#9a9ab0;margin:8px 0">'+(g.desc||'暂无描述')+'</p><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal();buyGoods(\''+n.replace(/'/g,"\\'")+'\')">购买</button><button class="btn btn-outline" onclick="closeModal()">关闭</button></div>')}
+function buyGoods(n){var u=APP.me;if(!u){t('请先登录');showLogin();return}var g=APP.fg(n);if(!g){t('不存在');return}if(g.stock<=0){t('库存不足');return}modal('<h2>确认购买</h2><p style="font-size:16px;margin:8px 0">'+g.name+'</p><p style="color:#7c5cfc;font-size:18px;font-weight:700">¥'+g.price.toFixed(1)+'</p><p style="color:#9a9ab0;font-size:13px;margin:8px 0">余额: ¥'+u.money.toFixed(1)+'</p><div class="modal-actions"><button class="btn btn-success" onclick="confirmBuy(\''+n.replace(/'/g,"\\'")+'\')">确认支付</button><button class="btn btn-outline" onclick="closeModal()">取消</button></div>')}
+function confirmBuy(n){var u=APP.me;if(!u){closeModal();t('请先登录');return}var g=APP.fg(n);if(!g){closeModal();t('不存在');return}if(g.stock<=0){closeModal();t('库存不足');return}if(u.money<g.price){closeModal();t('余额不足');return}u.money=Math.round((u.money-g.price)*100)/100;g.stock-=1;if(!APP.data.orders)APP.data.orders=[];APP.data.orders.push({id:'ORD'+Date.now(),gn:g.name,pr:g.price,buyer:u.user,time:new Date().toLocaleString(),st:'completed',note:''});APP.syncP();APP.save();closeModal();t('购买成功！');renderGoods()}
+function toggleFav(n){var u=APP.me;if(!u){t('请先登录');showLogin();return}if(!APP.data.favs)APP.data.favs=[];var fi=-1;for(var i=0;i<APP.data.favs.length;i++){if(APP.data.favs[i].user===u.user&&APP.data.favs[i].gn===n){fi=i;break}}if(fi>=0){APP.data.favs.splice(fi,1);APP.save();t('已取消收藏')}else{APP.data.favs.push({user:u.user,gn:n,time:new Date().toLocaleString()});APP.save();t('已收藏')}}
+function renderFav(){var c=$('favList');if(!c)return;var u=APP.me;if(!u){c.innerHTML='<p style="color:#9a9ab0;text-align:center;padding:40px">请先登录</p>';return}var fs=[];if(APP.data.favs)for(var i=0;i<APP.data.favs.length;i++)if(APP.data.favs[i].user===u.user)fs.push(APP.data.favs[i]);if(!fs.length){c.innerHTML='<p style="color:#9a9ab0;text-align:center;padding:40px">暂无收藏</p>';return}var h='';for(var i=0;i<fs.length;i++){h+='<div class="fav-item"><span>'+fs[i].gn+'</span><span>'+fs[i].time+'</span></div>'}c.innerHTML=h}
+function renderOrders(){var c=$('orderList');if(!c)return;var u=APP.me;if(!u){c.innerHTML='<p style="color:#9a9ab0;text-align:center;padding:40px">请先登录</p>';return}var os=[];if(APP.data.orders)for(var i=0;i<APP.data.orders.length;i++)if(APP.data.orders[i].buyer===u.user||u.role==='admin')os.push(APP.data.orders[i]);if(!os.length){c.innerHTML='<p style="color:#9a9ab0;text-align:center;padding:40px">暂无订单</p>';return}var h='';for(var i=0;i<os.length;i++){var o=os[i];h+='<div class="order-item"><div class="order-title">'+o.gn+'</div><div>¥'+o.pr.toFixed(1)+' | '+o.buyer+' | '+o.time+'</div><div class="order-status '+o.st+'">'+o.st+'</div></div>'}c.innerHTML=h}
+function renderProfile(){var c=$('profileInfo');var u=APP.me;if(!u){c.textContent='未登录';return}c.textContent='用户名: '+u.user+' | 余额: ¥'+u.money+' | 积分: '+u.pts}
+// 管理后台
+var adminTabNow='goods';
+function showAdmin(){goPage('admin');$('topAdminBtn').className='hidden'}
+function renderAdmin(){adminTab(adminTabNow)}
+function adminTab(t){adminTabNow=t;var bs=$('adminTabs').querySelectorAll('.tab');for(var i=0;i<bs.length;i++)bs[i].className='tab';var ts=['goods','orders','users','cats'];for(var i=0;i<ts.length;i++)if(ts[i]===t)bs[i].className='tab active';if(t==='goods')adminGoods();else if(t==='orders')adminOrders();else if(t==='users')adminUsers();else if(t==='cats')adminCats()}
+function adminGoods(){var c=$('adminContent');var h='<div class="admin-section"><h3>商品管理</h3><button class="btn btn-primary btn-sm" onclick="addProd()">+ 添加</button></div><table class="admin-table"><tr><th>名称</th><th>价格</th><th>库存</th><th>操作</th></tr>';for(var i=0;i<APP.data.prods.length;i++){var p=APP.data.prods[i];h+='<tr><td>'+p.name+'</td><td>¥'+p.price+'</td><td>'+p.stock+'</td><td class="admin-actions"><button class="btn btn-outline btn-sm" onclick="editProd('+i+')">编辑</button><button class="btn btn-danger btn-sm" onclick="delProd('+i+')">删除</button></td></tr>'}h+='</table>';c.innerHTML=h}
+function addProd(){modal('<h2>添加商品</h2><div class="form-group"><label>名称</label><input id="apn"></div><div class="form-group"><label>价格</label><input id="app" type="number" step="0.1"></div><div class="form-group"><label>库存</label><input id="aps" type="number"></div><div class="form-group"><label>分类</label><input id="apc" value="卡密"></div><div class="form-group"><label>描述</label><input id="apd"></div><div class="modal-actions"><button class="btn btn-primary" onclick="addProdDo()">添加</button><button class="btn btn-outline" onclick="closeModal()">取消</button></div>')}
+function addProdDo(){var n=$('apn').value.trim(),p=parseFloat($('app').value),s=parseInt($('aps').value),c=$('apc').value.trim()||'卡密',d=$('apd').value.trim();if(!n||isNaN(p)||isNaN(s)){t('请填完整');return}APP.data.prods.push({name:n,price:p,desc:d,stock:s,category:c});APP.syncG();closeModal();adminGoods();t('添加成功')}
+function editProd(i){var p=APP.data.prods[i];if(!p)return;modal('<h2>编辑商品</h2><div class="form-group"><label>名称</label><input id="epn" value="'+p.name.replace(/"/g,'"')+'"></div><div class="form-group"><label>价格</label><input id="epp" type="number" step="0.1" value="'+p.price+'"></div><div class="form-group"><label>库存</label><input id="eps" type="number" value="'+p.stock+'"></div><div class="form-group"><label>分类</label><input id="epc" value="'+(p.category||'卡密').replace(/"/g,'"')+'"></div><div class="form-group"><label>描述</label><input id="epd" value="'+(p.desc||'').replace(/"/g,'"')+'"></div><div class="modal-actions"><button class="btn btn-primary" onclick="editProdDo('+i+')">保存</button><button class="btn btn-outline" onclick="closeModal()">取消</button></div>')}
+function editProdDo(i){var n=$('epn').value.trim(),p=parseFloat($('epp').value),s=parseInt($('eps').value),c=$('epc').value.trim()||'卡密',d=$('epd').value.trim();if(!n||isNaN(p)||isNaN(s)){t('请填完整');return}APP.data.prods[i]={name:n,price:p,desc:d,stock:s,category:c};APP.syncG();closeModal();adminGoods();t('已保存')}
+function delProd(i){if(confirm('确认删除?')){APP.data.prods.splice(i,1);APP.syncG();adminGoods();t('已删除')}}
+function adminOrders(){var c=$('adminContent');var h='<h3>订单管理</h3><table class="admin-table"><tr><th>编号</th><th>商品</th><th>买家</th><th>金额</th><th>时间</th><th>状态</th></tr>';var os=APP.data.orders||[];for(var i=0;i<os.length;i++){var o=os[i];h+='<tr><td>'+o.id+'</td><td>'+o.gn+'</td><td>'+o.buyer+'</td><td>¥'+o.pr+'</td><td>'+o.time+'</td><td>'+o.st+'</td></tr>'}h+='</table>';c.innerHTML=h}
+function adminUsers(){var c=$('adminContent');var h='<h3>用户管理</h3><table class="admin-table"><tr><th>用户名</th><th>角色</th><th>余额</th><th>积分</th></tr>';for(var i=0;i<APP.data.users.length;i++){var u=APP.data.users[i];h+='<tr><td>'+u.user+'</td><td>'+u.role+'</td><td>¥'+u.money+'</td><td>'+u.pts+'</td></tr>'}h+='</table>';c.innerHTML=h}
+function adminCats(){var c=$('adminContent');var h='<h3>分类管理</h3><div style="margin-bottom:12px">';for(var i=0;i<APP.data.cats.length;i++){h+='<span class="cat-tag">'+APP.data.cats[i]+' <span style="cursor:pointer;margin-left:4px" onclick="delCat('+i+')">×</span></span>'}h+='</div><div style="display:flex;gap:8px"><input id="newCat" placeholder="新分类名"><button class="btn btn-primary btn-sm" onclick="addCat()">添加</button></div>';c.innerHTML=h}
+function addCat(){var n=$('newCat').value.trim();if(!n){t('请输入分类名');return}APP.data.cats.push(n);APP.save();adminCats();t('已添加')}
+function delCat(i){APP.data.cats.splice(i,1);APP.save();adminCats();t('已删除')}
+APP.load();renderHome();
+</script>
+</body></html>

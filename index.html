@@ -56,7 +56,7 @@ input:focus{border-color:#7c5cfc}
 .toast.show{display:block;animation:fadeInOut 2s ease}
 @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
 </style></head><body>
-<div class="top-bar"><h1>VG商城</h1><div class="top-actions"><button id="topUserBtn" onclick="showUserPanel()">👤</button><button id="topAdminBtn" class="hidden" onclick="showAdmin()">⚙️</button></div></div>
+<div class="top-bar"><h1>迷你辅助平台</h1><div class="top-actions"><button id="topUserBtn" onclick="showUserPanel()">👤</button><button id="topAdminBtn" class="hidden" onclick="showAdmin()">⚙️</button></div></div>
 <div id="page-home" class="page active"><div style="margin-bottom:12px"><input id="searchInput" placeholder="搜索商品..." oninput="searchGoods(this.value)"></div><div id="catTabs" class="tabs"></div><div id="goodsList" class="goods-grid"></div></div>
 <div id="page-fav" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">❤️ 收藏</h2><div id="favList"></div></div>
 <div id="page-orders" class="page"><h2 style="font-size:18px;font-weight:600;margin-bottom:12px">📦 订单</h2><div id="orderList"></div></div>
@@ -123,3 +123,4 @@ function delCat(i){APP.data.cats.splice(i,1);APP.save();adminCats();t('已删除
 APP.load();renderHome();
 </script>
 </body></html>
+<!-- 1780705396 -->
